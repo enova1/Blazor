@@ -9,6 +9,7 @@ bin/
 obj/
 
 # User-specific files
+*.vs
 *.suo
 *.user
 *.userosscache
