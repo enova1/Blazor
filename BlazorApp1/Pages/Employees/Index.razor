@@ -1,0 +1,53 @@
+﻿@page "/employees"
+@using BlazorApp1.Services
+@using BlazorApp1.Models
+@inject EmployeeService EmployeeService
+@inject NavigationManager NavigationManager
+
+
+<h1>Employee List</h1>
+<p>These components demonstrate Crud operations. Data is created in the Employee Service and kept in memory for the application life. 
+    once the application is closed generated data is lost. This is a simple example of how to use CRUD operations in Blazor. 
+    I might connect to an API endpoint in the future.
+</p>
+
+<fieldset title="Employees" name="Employees" style="border:groove; width:auto ">
+    <br/>
+    <div style="text-align: center;" >
+    <table >
+        @foreach (var employee in EmployeeService.GetEmployees())
+        {
+            <tr>
+                <td>@employee?.FirstName @employee?.LastName</td>
+                <td colspan="2">&nbsp;</td>
+                <td>
+                    <button @onclick="() => { if (employee != null) EditEmployee(employee); }">Edit</button> &nbsp;|&nbsp;
+                    <button @onclick="() => { if (employee != null) DeleteEmployee(employee); }">Delete</button>
+                </td>
+            </tr>
+            <trt><td colspan="3">&nbsp;</td></trt>
+        }
+        </table>
+    </div>
+</fieldset>
+<hr/>
+<p><button @onclick="GoToCreatePage">Create New Employee</button></p>
+
+
+@code {
+    void EditEmployee(Employees employee)
+    {
+        NavigationManager.NavigateTo($"/employees/edit/{employee.EmployeeId}");
+    }
+
+    void DeleteEmployee(Employees employee)
+    {
+        EmployeeService.DeleteEmployee(employee.EmployeeId);
+        StateHasChanged();
+    }
+
+    void GoToCreatePage()
+    {
+        NavigationManager.NavigateTo("/employees/create");
+    }
+}

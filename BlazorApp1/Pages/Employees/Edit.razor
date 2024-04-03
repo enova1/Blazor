@@ -1,0 +1,117 @@
+﻿@page "/employees/edit/{id:int}"
+@using BlazorApp1.Models
+@using BlazorApp1.Services
+@inject EmployeeService EmployeeService
+@inject NavigationManager NavigationManager
+
+<h1>Edit Employee</h1>
+
+@if (employee != null)
+{
+    <EditForm Model="employee" OnValidSubmit="@UpdateEmployee">
+        <DataAnnotationsValidator />
+
+        <table>
+            <!-- Employee Information -->
+            <tr>
+                <td><label for="firstName">First Name:</label></td>
+                <td><InputText id="firstName" @bind-Value="employee.FirstName" /></td>
+                <td><ValidationMessage For="@(() => employee.FirstName)" /></td>
+            </tr>
+            <tr>
+                <td><label for="lastName">Last Name:</label></td>
+                <td><InputText id="lastName" @bind-Value="employee.LastName" /></td>
+                <td><ValidationMessage For="@(() => employee.LastName)" /></td>
+            </tr>
+            <tr>
+                <td><label for="hireDate">Hire Date:</label></td>
+                <td><InputDate id="hireDate" @bind-Value="employee.HireDate" /></td>
+                <td><ValidationMessage For="@(() => employee.HireDate)" /></td>
+            </tr>
+            <!-- Add more rows for other properties as needed -->
+            <!-- Phone Information -->
+            <tr>
+                <td><label for="phoneType">Phone Type:</label></td>
+                <td><InputText id="phoneType" @bind-Value="phoneData.PhoneType" /></td>
+                <td><ValidationMessage For="@(() => phoneData.PhoneType)" /></td>
+            </tr>
+            <tr>
+                <td><label for="phoneNumber">Phone Number:</label></td>
+                <td><InputText id="phoneNumber" @bind-Value="phoneData.PhoneNumber" /></td>
+                <td><ValidationMessage For="@(() => phoneData.PhoneNumber)" /></td>
+            </tr>
+
+            <!-- Address Information -->
+            <tr>
+                <td><label for="address1">Address 1:</label></td>
+                <td><InputText id="address1" @bind-Value="addressData.Address1" /></td>
+                <td><ValidationMessage For="@(() => addressData.Address1)" /></td>
+            </tr>
+            <tr>
+                <td><label for="address2">Address 2:</label></td>
+                <td><InputText id="address2" @bind-Value="addressData.Address2" /></td>
+                <td><ValidationMessage For="@(() => addressData.Address2)" /></td>
+            </tr>
+            <tr>
+                <td><label for="city">City:</label></td>
+                <td><InputText id="city" @bind-Value="addressData.City" /></td>
+                <td><ValidationMessage For="@(() => addressData.City)" /></td>
+            </tr>
+            <tr>
+                <td><label for="state">State:</label></td>
+                <td><InputText id="state" @bind-Value="addressData.State" /></td>
+                <td><ValidationMessage For="@(() => addressData.State)" /></td>
+            </tr>
+            <tr>
+                <td><label for="zipCode">Zip Code:</label></td>
+                <td><InputText id="zipCode" @bind-Value="addressData.ZipCode" /></td>
+                <td><ValidationMessage For="@(() => addressData.ZipCode)" /></td>
+            </tr>
+        </table>
+
+        <button type="submit">Save Changes</button>
+    </EditForm>
+
+}
+else
+{
+    <p>Employee not found</p>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Employees employee;
+    private EmployeePhones phoneData;
+    private EmployeeAddresses addressData;
+
+    protected override void OnInitialized()
+    {
+        employee = EmployeeService.GetEmployeeById(Id);
+        phoneData = employee.EmployeePhones.FirstOrDefault() ?? new EmployeePhones
+        {
+                PhoneType = string.Empty,
+                PhoneNumber = string.Empty
+        };
+        addressData = employee.EmployeeAddresses.FirstOrDefault() ?? new EmployeeAddresses
+        {
+                Address1 = string.Empty,
+                City = string.Empty,
+                State = string.Empty,
+                ZipCode = string.Empty,
+        };
+    }
+
+    private void UpdateEmployee()
+    {
+        // Update employee properties
+        employee.EmployeePhones.Clear();
+        employee.EmployeePhones.Add(phoneData);
+        employee.EmployeeAddresses.Clear();
+        employee.EmployeeAddresses.Add(addressData);
+
+        EmployeeService.UpdateEmployee(employee);
+        NavigationManager.NavigateTo("/employees");
+    }
+}

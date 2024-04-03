@@ -1,0 +1,87 @@
+﻿@page "/weather"
+
+@inject HttpClient Http
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather</h1>
+
+<p>This component demonstrates fetching data from an external WebApi. The WebApi is available in my GitHub Repo
+    <a href="https://github.com/enova1" target="_blank">My GitHub Repos</a>
+</p>
+
+@if (_forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (_errorMessage != null)
+{
+    <p><em>@_errorMessage</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Temp. (C)</th>
+            <th>Temp. (F)</th>
+            <th>Summary</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var forecast in _forecasts)
+        {
+            <tr>
+                <td>@forecast.Date.ToShortDateString()</td>
+                <td>@forecast.TemperatureC</td>
+                <td>@forecast.TemperatureF</td>
+                <td>@forecast.Summary</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private WeatherForecast[]? _forecasts;
+    private string? _errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Fetch data from the WeatherForecast endpoint with 'no-cors' mode
+            var response = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+
+            if (response is { Length: > 0 })
+            {
+                _forecasts = response;
+            }
+            else
+            {
+                _errorMessage = $"An error occurred while fetching data: {response}";
+                Console.WriteLine(_errorMessage); // Optionally log the error
+                _forecasts = Array.Empty<WeatherForecast>();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            _errorMessage = $"An error occurred while fetching data: {ex.Message}";
+            Console.WriteLine(_errorMessage); // Optionally log the error
+            _forecasts = Array.Empty<WeatherForecast>();
+        }
+    }
+
+    public class WeatherForecast
+    {
+        public DateTime Date { get; set; }
+
+        public int TemperatureC { get; set; }
+
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+
+        public string? Summary { get; set; }
+    }
+}

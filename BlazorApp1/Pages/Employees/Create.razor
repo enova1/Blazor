@@ -1,0 +1,107 @@
+﻿@page "/employees/create"
+@using BlazorApp1.Models
+@using BlazorApp1.Services
+@inject EmployeeService EmployeeService
+@inject NavigationManager NavigationManager
+@using System.ComponentModel.DataAnnotations
+
+
+<h1>Create New Employee</h1>
+
+<EditForm Model="_employee" OnValidSubmit="@CreateEmployee">
+    <DataAnnotationsValidator />
+
+    <table>
+        <!-- Employee Information -->
+        <tr>
+            <td><label for="firstName">First Name:</label></td>
+            <td><InputText id="firstName" @bind-Value="_employee.FirstName" /></td>
+            <td><ValidationMessage For="@(() => _employee.FirstName)" /></td>
+        </tr>
+        <tr>
+            <td><label for="lastName">Last Name:</label></td>
+            <td><InputText id="lastName" @bind-Value="_employee.LastName" /></td>
+            <td><ValidationMessage For="@(() => _employee.LastName)" /></td>
+        </tr>
+        <tr>
+            <td><label for="hireDate">Hire Date:</label></td>
+            <td><InputDate id="hireDate" @bind-Value="_employee.HireDate" /></td>
+            <td><ValidationMessage For="@(() => _employee.HireDate)" /></td>
+        </tr>
+
+        <!-- Phone Information -->
+        <tr>
+            <td><label for="phoneType">Phone Type:</label></td>
+            <td><InputText id="phoneType" @bind-Value="_phoneData.PhoneType" /></td>
+            <td><ValidationMessage For="@(() => _phoneData.PhoneType)" /></td>
+        </tr>
+        <tr>
+            <td><label for="phoneNumber">Phone Number:</label></td>
+            <td><InputText id="phoneNumber" @bind-Value="_phoneData.PhoneNumber" /></td>
+            <td><ValidationMessage For="@(() => _phoneData.PhoneNumber)" /></td>
+        </tr>
+
+        <!-- Address Information -->
+        <tr>
+            <td><label for="address1">Address 1:</label></td>
+            <td><InputText id="address1" @bind-Value="_addressData.Address1" /></td>
+            <td><ValidationMessage For="@(() => _addressData.Address1)" /></td>
+        </tr>
+        <tr>
+            <td><label for="address2">Address 2:</label></td>
+            <td><InputText id="address2" @bind-Value="_addressData.Address2" /></td>
+            <td><ValidationMessage For="@(() => _addressData.Address2)" /></td>
+        </tr>
+        <tr>
+            <td><label for="city">City:</label></td>
+            <td><InputText id="city" @bind-Value="_addressData.City" /></td>
+            <td><ValidationMessage For="@(() => _addressData.City)" /></td>
+        </tr>
+        <tr>
+            <td><label for="state">State:</label></td>
+            <td><InputText id="state" @bind-Value="_addressData.State" /></td>
+            <td><ValidationMessage For="@(() => _addressData.State)" /></td>
+        </tr>
+        <tr>
+            <td><label for="zipCode">Zip Code:</label></td>
+            <td><InputText id="zipCode" @bind-Value="_addressData.ZipCode" /></td>
+            <td><ValidationMessage For="@(() => _addressData.ZipCode)" /></td>
+        </tr>
+    </table>
+    <hr />
+    <button type="submit">Create Employee</button>
+</EditForm>
+
+
+
+@code {
+    private readonly Employees _employee = new ()
+        {
+            FirstName = string.Empty,
+            LastName = string.Empty,
+            HireDate = DateTime.Now,
+            EmployeePhones = [],
+            EmployeeAddresses = []
+        };
+    private readonly EmployeePhones _phoneData = new()
+        {
+            PhoneType = string.Empty,
+            PhoneNumber = string.Empty
+        };
+    private readonly EmployeeAddresses _addressData = new ()
+        {
+            Address1 = string.Empty,
+            City = string.Empty,
+            State = string.Empty,
+            ZipCode = string.Empty,
+        };
+    private void CreateEmployee()
+    {
+        _employee.EmployeePhones = [_phoneData];
+        _employee.EmployeeAddresses = [_addressData];
+
+
+        EmployeeService.CreateEmployee(_employee);
+        NavigationManager.NavigateTo("/employees");
+    }
+}
