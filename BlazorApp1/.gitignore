@@ -1,0 +1,15 @@
+# Visual Studio Code
+.vscode/
+
+# JetBrains Rider
+.idea/
+
+# Compiled files
+bin/
+obj/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
