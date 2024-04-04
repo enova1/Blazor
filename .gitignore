@@ -1,8 +1,8 @@
-
-BlazorApp1/.vs/BlazorApp1/FileContentIndex/633c8bed-f14e-4b70-b1fa-4f7b770a9fa0.vsidx
-BlazorApp1/.vs/BlazorApp1/FileContentIndex/7b181989-7c99-49c0-b208-e67e6086c9e5.vsidx
-BlazorApp1/.vs/BlazorApp1/FileContentIndex/d7ebfcbf-5654-4951-a4cd-5ea3c311e495.vsidx
-BlazorApp1/.vs/BlazorApp1/FileContentIndex/d7ebfcbf-5654-4951-a4cd-5ea3c311e495.vsidx
+# Visual Studio files
+.vs/
+obj/
+bin/
 *.vsidx
-BlazorApp1/.vs/BlazorApp1/v17/.suo
-BlazorApp1/.vs/BlazorApp1/v17/.suo
+
+# Rider IDE files
+.idea/
